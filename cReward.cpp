@@ -100,7 +100,7 @@ bool cReward::WalletInfoRead(const std::string _WalletInfoJson, std::string& _Ma
     return bRet;
 }
 
-bool cReward::ResultInfoRead(const std::string _ResultInfoJson, const std::string _Master_Wallet_Addr, const std::string _Master_Wallet_PrivateKey, float& _nTotalRewardCoin)
+bool cReward::ResultInfoRead(const std::string _ResultInfoJson, const std::string _Master_Wallet_Addr, const std::string _Master_Wallet_PrivateKey, long double& _nTotalRewardCoin)
 {
     bool bRet = true;
 
@@ -186,9 +186,9 @@ bool cReward::SetUrl()
     return bRet;
 }
 
-__int64 cReward::TokenBalance()
+long double cReward::TokenBalance()
 {
-    __int64 Total_Token = 0;
+    long double Total_Token = 0;
 
     m_pUrl->InitCURL();
     if (true == SetContentHeader())

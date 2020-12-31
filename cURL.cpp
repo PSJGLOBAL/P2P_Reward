@@ -23,9 +23,9 @@ cURL::~cURL()
 
 }
 
-__int64 cURL::Get_TokenBalance(const std::string _Param, const std::string _Param2, const std::string _Param3, cJSON* Json)
+long double cURL::Get_TokenBalance(const std::string _Param, const std::string _Param2, const std::string _Param3, cJSON* Json)
 {
-    __int64 nTokenBalance = 0;
+    long double nTokenBalance = 0;
 
     if (m_curl)
     {
@@ -66,7 +66,7 @@ __int64 cURL::Get_TokenBalance(const std::string _Param, const std::string _Para
             else
             {
                 nTokenBalance = Info.Balance;
-                std::cout << "Balance = [ " << nTokenBalance << " ]" << std::endl;
+                std::cout << "Balance = [ " << static_cast<__int64>(nTokenBalance) << " ]" << std::endl;
             }
         }
     }

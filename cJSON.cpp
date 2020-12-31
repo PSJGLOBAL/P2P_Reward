@@ -108,7 +108,7 @@ bool cJSON::bRead_WalletInfo(const std::string _WalletInfo_Json, std::string& _M
     return bRet;
 }
 
-bool cJSON::bRead_ResultInfo(const std::string _ResultInfo_Json, const std::string _Master_Wallet_Addr, const std::string _Master_Wallet_PrivateKey, float& _nTotalRewardCount)
+bool cJSON::bRead_ResultInfo(const std::string _ResultInfo_Json, const std::string _Master_Wallet_Addr, const std::string _Master_Wallet_PrivateKey, long double& _nTotalRewardCount)
 {
     bool bRet = true;
 
@@ -195,7 +195,7 @@ bool cJSON::bRead_ResultInfo(const std::string _ResultInfo_Json, const std::stri
                 {
                     StReward_Info _reward_Info;
 
-                    for (SizeType i = 0; i < NameList.Size(); ++i)
+                    for (SizeType i = 0; i < NameList.Size(); i++)
                     {
                         if (true == NameList[i]["value"].IsString())
                         {
@@ -203,13 +203,21 @@ bool cJSON::bRead_ResultInfo(const std::string _ResultInfo_Json, const std::stri
                             std::string TempPrice = NameList[i]["value"].GetString();
                             _reward_Info.Price = static_cast<float>(atof(TempPrice.c_str()));
                         }
-                        else if(true == NameList[i]["value"].IsFloat())
+                        else if(true == NameList[i]["value"].IsFloat() || true == NameList[i]["value"].IsLosslessFloat())
                         {
                             _reward_Info.Price = NameList[i]["value"].GetFloat();
                         }
-                        else if (true == NameList[i]["value"].GetInt64())
+                        else if (true == NameList[i]["value"].IsDouble() || true == NameList[i]["value"].IsLosslessDouble())
+                        {
+                            _reward_Info.Price = NameList[i]["value"].GetDouble();
+                        }
+                        else if (true == NameList[i]["value"].IsInt64() || true == NameList[i]["value"].IsUint64())
                         {
                             _reward_Info.Price = static_cast<float>(NameList[i]["value"].GetInt64());
+                        }
+                        else if (true == NameList[i]["value"].IsInt() || true == NameList[i]["value"].IsUint())
+                        {
+                            _reward_Info.Price = static_cast<float>(NameList[i]["value"].GetInt());
                         }
                         
                         _reward_Info.Work_Time = NameList[i]["work_time"].GetInt64();
@@ -230,27 +238,18 @@ bool cJSON::bRead_ResultInfo(const std::string _ResultInfo_Json, const std::stri
                         }
 
                         ret = m_Reward.Reward_List.insert(std::make_pair(_reward_Info.Wallet_addr, _reward_Info));
-
-                        if (m_Reward.Reward_List.size() == 1 && true == ret.second)
+                                                
+                        if (false == ret.second)
                         {
                             it = m_Reward.Reward_List.begin();
-                        }
-                        else if (m_Reward.Reward_List.size() > 1 && false == ret.second)
-                        {
-                            if (it != m_Reward.Reward_List.end())
+
+                            for (it = m_Reward.Reward_List.begin(); it != m_Reward.Reward_List.end(); ++it)
                             {
-                                if (it->second.Wallet_addr == _reward_Info.Wallet_addr)
-                                {
-                                    m_Reward.Reward_List[it->second.Wallet_addr].Price += _reward_Info.Price;
-                                    m_Reward.Reward_List[it->second.Wallet_addr].Work_Time += _reward_Info.Work_Time;
-
-                                    it++;
-
-                                    if (it == m_Reward.Reward_List.end())
-                                    {
-                                        it = m_Reward.Reward_List.begin();
-                                    }
-                                }
+								if (it->second.Wallet_addr == _reward_Info.Wallet_addr)
+								{
+									m_Reward.Reward_List[it->second.Wallet_addr].Price += _reward_Info.Price;
+									m_Reward.Reward_List[it->second.Wallet_addr].Work_Time += _reward_Info.Work_Time;
+								}
                             }
                         }
                     }
@@ -382,7 +381,7 @@ bool cJSON::bRead_RewardResultInfo(const std::string _RewardResultInfoJson)
     return bRet;
 }
 
-bool cJSON::bWrite_RewardResult(std::map<int, StReward_Result> _ResultMap, std::string FaileName, float nTotalRewardCoin)
+bool cJSON::bWrite_RewardResult(std::map<int, StReward_Result> _ResultMap, std::string FaileName, long double nTotalRewardCoin)
 {
     Document doc;
     std::string TempJson;

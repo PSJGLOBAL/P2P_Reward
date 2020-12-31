@@ -144,7 +144,7 @@ int main(int argc, char* argv[])
             }
 
             // 토큰 밸런스 추출
-            __int64 nTotal_Token = pReward->TokenBalance();
+            long double nTotal_Token = pReward->TokenBalance();
             __int64 nGas_Fee, nGas_Limit;
 
             if (nTotal_Token <= 0 || nTotal_Token < pReward->m_nTotalRewardCoin)
@@ -156,7 +156,7 @@ int main(int argc, char* argv[])
             }
             else
             {
-                std::cout << "Your Token Amount = [ " << nTotal_Token << " ]" << std::endl;
+                std::cout << "Your Token Amount = [ " << static_cast<__int64>(nTotal_Token) << " ]" << std::endl;
 
                 nGas_Fee = pReward->GetGasFee();
 
