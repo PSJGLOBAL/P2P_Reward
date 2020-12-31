@@ -14,14 +14,14 @@ public:
 
     std::string GetWalletInfoPath();
     std::string GetResultInfoPath();
-    std::string GetRewardResultInfoPath();
+    std::string GetRewardResultInfoPath(std::string ResultFileName);
 
     bool WalletInfoRead(const std::string _WalletInfoJson, std::string& _MasterWalletAddr, std::string& _MasterWalletPrivateKey);
     bool ResultInfoRead(const std::string _ResultInfoJson, const std::string _Master_Wallet_Addr, const std::string _Master_Wallet_PrivateKey, long double& _nTotalRewardCoin);
     bool RewardResultInfoRead(const std::string _RewardResultInfoJson);
 
-    bool GetRewardInfo();
-    bool GetReRewardInfo();
+    bool GetRewardInfo(std::string RewardFileName);
+    bool GetReRewardInfo(std::string ResultFileName);
 
     bool SetContentHeader();
     bool SetUrl();
@@ -30,9 +30,40 @@ public:
     __int64 GetGasFee();
     __int64 GetGasLimit();
 
-    bool Token_Transfer();
+    bool Token_Transfer(std::string ResultFileName);
 
-    bool Token_ReTransfer();
+    bool Token_ReTransfer(std::string ResultFileName);
+
+	std::vector<std::string> Get_Files_inDirectory(const std::string& _path, const std::string& _filter)
+	{
+        std::string searching = "*.json";// _filter; //_path + _filter;
+
+		std::vector<std::string> return_;
+
+		_finddata_t fd;
+		long handle = _findfirst(searching.c_str(), &fd);  //현재 폴더 내 모든 파일을 찾는다.
+
+		if (handle == -1)    
+            return return_;
+
+        std::string TempFileName(fd.name);
+        if (0 < TempFileName.length())
+        {
+			int result = 0;
+			do
+			{
+				if (0 == strncmp(fd.name, "resultinfo_", 11) && 21 >= strlen(fd.name))
+				{
+					return_.push_back(fd.name);
+					std::cout << "ResultInfo JSON File : [ " << fd.name << " ]" << std::endl;
+				}
+				result = _findnext(handle, &fd);
+			} while (result != -1);
+        }
+		_findclose(handle);
+
+		return return_;
+	}
 
 public:
     cJSON* m_pJson;

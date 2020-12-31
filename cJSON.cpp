@@ -381,8 +381,11 @@ bool cJSON::bRead_RewardResultInfo(const std::string _RewardResultInfoJson)
     return bRet;
 }
 
-bool cJSON::bWrite_RewardResult(std::map<int, StReward_Result> _ResultMap, std::string FaileName, long double nTotalRewardCoin)
-{
+bool cJSON::bWrite_RewardResult(std::map<int, StReward_Result> _ResultMap, std::string FileName, long double nTotalRewardCoin)
+{   
+    std::string TempFileName;
+    TempFileName.assign("Reward_Result.json");
+
     Document doc;
     std::string TempJson;
     std::map<int, StReward_Result>::iterator Tempit;
@@ -437,7 +440,7 @@ bool cJSON::bWrite_RewardResult(std::map<int, StReward_Result> _ResultMap, std::
     writer.EndObject();
 
     FILE* fp = NULL;
-    fopen_s(&fp, FaileName.c_str(), "wb");
+    fopen_s(&fp, TempFileName.c_str(), "wb");
     fwrite(s.GetString(), s.GetLength(), 1, fp);
     fclose(fp);
 
@@ -450,12 +453,14 @@ struct stBalanceInfo cJSON::Get_BalanceInfo(const std::string _String_Json)
 
     m_DocStringData.Parse(_String_Json.c_str());
 
-    if (false == m_DocStringData["meta"]["error"].IsString())
-    {
-        BalanceInfo.Balance = stold(m_DocStringData["payload"]["token"].GetString());
-    }
-
-    return BalanceInfo;
+	m_DocStringData.Parse(_String_Json.c_str());	
+	
+	if(false == m_DocStringData["meta"]["error"].IsString())
+	{
+	    BalanceInfo.Balance = std::stold(m_DocStringData["payload"]["token"].GetString());
+	}
+	
+	return BalanceInfo;
 }
 
 __int64 cJSON::Get_GasPrice(const std::string _String_Json)

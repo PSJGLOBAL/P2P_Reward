@@ -20,7 +20,7 @@ cReward::cReward()
 
     nGas_Price = nGas_Limit = 0;
 
-    bTransfer_State = false;
+    bTransfer_State = true;
 
     m_nReCount = 0;
 
@@ -69,14 +69,14 @@ std::string cReward::GetResultInfoPath()
 
     ResultInfo.assign(sPath);
     ResultInfo.append("\\");
-    ResultInfo.append("resultinfo.json");
+    //ResultInfo.append("resultinfo.json");
 
-    std::cout << "ResultInfo Json File Location : [ " << ResultInfo.c_str() << " ] " << std::endl;
+    //std::cout << "ResultInfo Json File Location : [ " << ResultInfo.c_str() << " ] " << std::endl;
 
     return ResultInfo;
 }
 
-std::string cReward::GetRewardResultInfoPath()
+std::string cReward::GetRewardResultInfoPath(std::string ResultFileName)
 {
     char sPath[MAX_PATH] = { 0, };
     ::GetCurrentDirectoryA(MAX_PATH, sPath);
@@ -84,7 +84,7 @@ std::string cReward::GetRewardResultInfoPath()
 
     RewardResultInfo.assign(sPath);
     RewardResultInfo.append("\\");
-    RewardResultInfo.append("Reward_Result.json");
+    RewardResultInfo.append(ResultFileName);
 
     std::cout << "RewardResultInfo Json File Location : [ " << RewardResultInfo.c_str() << " ] " << std::endl;
 
@@ -118,7 +118,7 @@ bool cReward::RewardResultInfoRead(const std::string _RewardResultInfoJson)
     return bRet;
 }
 
-bool cReward::GetRewardInfo()
+bool cReward::GetRewardInfo(std::string RewardFileName)
 {
     bool bRet = true;
 
@@ -133,11 +133,11 @@ bool cReward::GetRewardInfo()
     std::cout << "Project_Status : [ " << m_pRewardInfo->Project_Flag.c_str() << " ]" << std::endl;
     std::cout << "Total Reward Count : [ " << m_pRewardInfo->Reward_List.size() << " ]" << std::endl;
 
-    remove(GetResultInfoPath().c_str());
+    remove(RewardFileName.c_str());
     return bRet;
 }
 
-bool cReward::GetReRewardInfo()
+bool cReward::GetReRewardInfo(std::string ResultFileName)
 {
     bool bRet = true;
 
@@ -150,7 +150,7 @@ bool cReward::GetReRewardInfo()
 
     std::cout << "ReSend Master Wallet Address : [ " << m_pRewardInfo->Master_Wallet_Addr.c_str() << " ]" << std::endl;
 
-    remove(GetRewardResultInfoPath().c_str());
+    remove(GetRewardResultInfoPath(ResultFileName).c_str());
 
     return bRet;
 }
@@ -247,7 +247,7 @@ __int64 cReward::GetGasLimit()
     return nGas_Limit;
 }
 
-bool cReward::Token_Transfer()
+bool cReward::Token_Transfer(std::string ResultFileName)
 {
     bool bRet = true;
 
@@ -289,7 +289,8 @@ bool cReward::Token_Transfer()
             Result.ErrorCode.assign(StCode.Code.c_str());
             Result.ErrorMsg.assign(StCode.Msg.c_str());
 
-            bTransfer_State = true;
+            if(bTransfer_State != false)
+                bTransfer_State = true;
         }
         else
         {
@@ -317,13 +318,20 @@ bool cReward::Token_Transfer()
         }
     }
 
-    std::string TempResultFileName("Reward_Result.json");
+    std::string TempResultFileName(ResultFileName);
+    //TempResultFileName = TempResultFileName.replace(TempResultFileName.begin(), TempResultFileName.begin() + 11, "");
     m_pJson->bWrite_RewardResult(m_Reward_Result, TempResultFileName, m_nTotalRewardCoin);
+
+//     m_Reward_Result.clear();
+//     m_nTotalRewardCoin = 0.0f;
+// 
+//     m_pRewardInfo->Reward_List.clear();
+// 	m_pReRewardInfo->ReReward_List.clear();
 
     return bRet;
 }
 
-bool cReward::Token_ReTransfer()
+bool cReward::Token_ReTransfer(std::string ResultFileName)
 {
     bool bRet = false;
 
@@ -421,7 +429,7 @@ bool cReward::Token_ReTransfer()
             }
         }
 
-        std::string TempResultFileName("Reward_Result.json");
+        std::string TempResultFileName(ResultFileName);
         m_pJson->bWrite_RewardResult(m_Reward_Result, TempResultFileName, m_nTotalRewardCoin);
     }
 

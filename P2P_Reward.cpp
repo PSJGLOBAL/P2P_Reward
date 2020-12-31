@@ -1,13 +1,7 @@
 ﻿#include <iostream>
+#include <io.h>
 
-#if defined(_WIN32) || defined(_WIN64)
-#include <corecrt_io.h>
-#else
-#include <cstdio>
-#include <sys/stat.h>
-#include <unistd.h>
-#endif
-
+#include "Common.h"
 #include "cReward.h"
 
 static std::string TempWalletAddr;
@@ -17,7 +11,7 @@ static std::string TempWalletFilePath;
 int main(int argc, char* argv[])
 {
     std::cout << "P2P_Reward Start!!!!!" << std::endl;
-       
+
     short nState = 0;
     bool bState = false;
 
@@ -118,6 +112,7 @@ int main(int argc, char* argv[])
                 if (true != bState)
                 {
                     std::cout << "Master Wallet Info Not Load" << std::endl;
+                    std::cout << "Path = " << TempWalletFilePath.c_str() << std::endl;
                     system("pause");
                     exit(1);
                 }
@@ -132,17 +127,26 @@ int main(int argc, char* argv[])
 
         if (true == bState)
         {
-            if (true != pReward->ResultInfoRead(pReward->GetResultInfoPath(), TempWalletAddr, TempWalletPrivateKey, pReward->m_nTotalRewardCoin))
-            {
-                std::cout << "Reward Result Info Not Found" << std::endl;
-                system("pause");
-                exit(1);
-            }
-            else
-            {
-                pReward->GetRewardInfo();
-            }
+            // for 문 돌려서 resultinfo_*.json 파일의 목록을 Vector에 담는다.
+            std::vector<std::string> TempResult = pReward->Get_Files_inDirectory(pReward->GetResultInfoPath(), "result_?????.json");
 
+            for (int i = 0; i < static_cast<int>(TempResult.size()); ++i)
+            {
+                std::string ResultFileName(TempResult[i].c_str());
+                std::string PathName = pReward->GetResultInfoPath();
+                PathName = PathName + ResultFileName;
+                std::cout << "Read ResultInfo Json File : [ " << PathName.c_str() << " ] " << std::endl;
+                if (true != pReward->ResultInfoRead(PathName, TempWalletAddr, TempWalletPrivateKey, pReward->m_nTotalRewardCoin))
+                {
+                    std::cout << "Reward Result Info Not Found" << std::endl;
+                    system("pause");
+                    exit(1);
+                }
+                else
+                {
+                    pReward->GetRewardInfo(PathName);
+                }
+            }
             // 토큰 밸런스 추출
             long double nTotal_Token = pReward->TokenBalance();
             __int64 nGas_Fee, nGas_Limit;
@@ -176,23 +180,27 @@ int main(int argc, char* argv[])
                     exit(1);
                 }
 
-                pReward->Token_Transfer();
+                pReward->Token_Transfer("Reward_Result.json");
 
             }
 
             if (false == pReward->bTransfer_State)
             {
+                std::string RewardResultName("Reward_Result.json");
+                //ResultFileName = ResultFileName.replace(ResultFileName.begin(), ResultFileName.end() + 11, "");
+                //RewardResultName.append(ResultFileName);
+
                 while (false == pReward->bTransfer_State)
                 {
-                    if (true != pReward->RewardResultInfoRead(pReward->GetRewardResultInfoPath()))
+                    if (true != pReward->RewardResultInfoRead(pReward->GetRewardResultInfoPath(RewardResultName)))
                     {
                         std::cout << "Master Wallet Info Not Load" << std::endl;
                         system("pause");
                         exit(1);
                     }
 
-                    pReward->GetReRewardInfo();
-                    pReward->Token_ReTransfer();
+                    pReward->GetReRewardInfo(RewardResultName);
+                    pReward->Token_ReTransfer(RewardResultName);
                 }
             }
             std::cout << "Reward Success" << std::endl;

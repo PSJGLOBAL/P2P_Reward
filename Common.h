@@ -1,9 +1,10 @@
 #pragma once
+
 #if defined(_WIN32) || defined(_WIN64)
-#include <io.h>
+    #include <io.h>
 #else
-#include <stdint.h>
-#include <unistd.h>
+    #include <stdint.h>
+    #include <unistd.h>
 #endif
 
 // Common
@@ -24,6 +25,9 @@
 #include <filewritestream.h>
 #include <prettywriter.h>
 #include <assert.h>
+#include <string>
+
+#include <vector>
 
 static const char* SmartContract = ""; // 토큰 생성 후 발행된 SmartContract Address를 해당 부분에 집어 넣으면 됩니다.
 static const char* APIKey = ""; // https://cryptoapis.io/ 에서 API를 발급받아 해당 부분에 집어 넣으면 됩니다.

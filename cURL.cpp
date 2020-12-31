@@ -25,7 +25,7 @@ cURL::~cURL()
 
 long double cURL::Get_TokenBalance(const std::string _Param, const std::string _Param2, const std::string _Param3, cJSON* Json)
 {
-    long double nTokenBalance = 0;
+    long double nTokenBalance = 0.0f;
 
     if (m_curl)
     {
