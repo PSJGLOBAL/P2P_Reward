@@ -13,8 +13,8 @@ if type = 2, it will used already inputted data(Your_Wallet_Address and Your_Wal
 	type is 2 = P2P_Reward.exe 2
 
 
-## P2P_CoreProcess
-index-win.exe -> P2P_CoreProcess
+## P2P_CLI_Process
+index-win.exe -> P2P_CLI_Process
 
 pro 입력시 Provider 로 작동
 req 입력시 Requester로 작동
@@ -34,10 +34,7 @@ requester mode : req ->start(it need project.json<br>
 
 
 
-
-
-
-## P2P Setup File
+## Conun_P2P Setup File
 ### :rocket: Release
-Download Link: [Click](https://docs.conun.io/files/Conun_P2P_Setup.exe)
+Download Link: [Click](https://docs.conun.io/files/Conun_P2P_Setup.exe)<br>
 Released since 2021.01
