@@ -36,23 +36,31 @@ public:
 
 	std::vector<std::string> Get_Files_inDirectory(const std::string& _path, const std::string& _filter)
 	{
-        std::string searching = "*.json";// _filter; //_path + _filter;
-
 		std::vector<std::string> return_;
 
 		_finddata_t fd;
-		long handle = _findfirst(searching.c_str(), &fd);  //현재 폴더 내 모든 파일을 찾는다.
+		long handle = _findfirst(_filter.c_str(), &fd);  //현재 폴더 내 모든 파일을 찾는다.
 
 		if (handle == -1)    
             return return_;
 
-        std::string TempFileName(fd.name);
-        if (0 < TempFileName.length())
-        {
+        if (0 < strlen(fd.name))
+        {            
 			int result = 0;
 			do
 			{
-				if (0 == strncmp(fd.name, "resultinfo_", 11) && 21 >= strlen(fd.name))
+                int nCompRet = strncmp(fd.name, _filter.c_str(), 11);
+                int nCompRet2 = 0;
+
+                for (int nLoop = 0; nLoop < static_cast<int>(strlen(fd.name)); nLoop++)
+                {
+                    nCompRet2 = isspace(fd.name[nLoop]); 
+                    if (nCompRet2 != 0)
+                        break;
+                }
+
+                int nLen = strlen(fd.name);
+				if (0 == nCompRet && 0 == nCompRet2 && 26 >= nLen)
 				{
 					return_.push_back(fd.name);
 					std::cout << "ResultInfo JSON File : [ " << fd.name << " ]" << std::endl;
