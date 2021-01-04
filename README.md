@@ -1,5 +1,3 @@
-# P2P_Reward
-P2P_Reward
 ===============================================================
 P2P_Reward.exe [type] if(type == 1){ [Your_Wallet_Address] [Your_Wallet_privateKey] }
 
