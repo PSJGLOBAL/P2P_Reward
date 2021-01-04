@@ -3,10 +3,14 @@
 P2P_Reward.exe [type] if(type == 1){ [Your_Wallet_Address] [Your_Wallet_privateKey] }
 
 if type = 1, need arguments(Your_Wallet_Address and Your_Wallet_privateKey)
+
 if type = 2, it will used already inputted data(Your_Wallet_Address and Your_Wallet_privateKey)
 
+
 examples)
+
     type is 1 : P2P_Reward.exe 1 Your_Wallet_Address Your_Wallet_privateKey
+    
     type is 2 : P2P_Reward.exe 2
 
 ===============================================================
