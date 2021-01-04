@@ -1,4 +1,5 @@
-===============================================================\n
+===============================================================
+
 P2P_Reward.exe [type] if(type == 1){ [Your_Wallet_Address] [Your_Wallet_privateKey] }
 
 if type = 1, need arguments(Your_Wallet_Address and Your_Wallet_privateKey)
@@ -9,6 +10,7 @@ examples)
     type is 2 : P2P_Reward.exe 2
 
 ===============================================================
+
 index-win.exe ==> P2P Core Porcess
 
 pro 입력시 Provider 로 작동
