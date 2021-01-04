@@ -30,7 +30,7 @@ CRE_W_A_F : force creating wallet<br>
 checkbalance_X : X - 0 : DSCT, X - 1 : CONT<br>
 WAL_XXXXXXXXXXXXXXXXXX : overwrite wallet with XXXXXXXXXXXXXXXXXXX<br>
 provider mode : pro -> select project -> start<br>
-requester mode : req ->start(it need project.json<br>
+requester mode : req ->start(it need project.json)<br>
 
 
 
