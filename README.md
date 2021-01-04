@@ -1,4 +1,4 @@
-===============================================================
+===============================================================\n
 P2P_Reward.exe [type] if(type == 1){ [Your_Wallet_Address] [Your_Wallet_privateKey] }
 
 if type = 1, need arguments(Your_Wallet_Address and Your_Wallet_privateKey)
